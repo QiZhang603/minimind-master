@@ -10,8 +10,9 @@ MODEL_PATH="${MODEL_PATH:-${REPO_ROOT}/minimind-3}"
 REWARD_FN_PATH="${REWARD_FN_PATH:-${SCRIPT_DIR}/reward_fn_minimind.py}"
 CKPT_DIR="${CKPT_DIR:-${REPO_ROOT}/out/verl_grpo_ckpt}"
 
-WANDB_PROJECT="${WANDB_PROJECT:-MiniMind-GRPO-verl}"
-WANDB_EXPERIMENT="${WANDB_EXPERIMENT:-minimind-grpo-2x4090}"
+VERL_PROJECT="${VERL_PROJECT:-MiniMind-GRPO-verl}"
+VERL_EXPERIMENT="${VERL_EXPERIMENT:-minimind-grpo-2x4090}"
+VERL_LOGGER="${VERL_LOGGER:-[\"console\"]}"
 
 MAX_PROMPT_LEN="${MAX_PROMPT_LEN:-1024}"
 MAX_RESPONSE_LEN="${MAX_RESPONSE_LEN:-512}"
@@ -70,9 +71,9 @@ python3 -m verl.trainer.main_ppo \
   reward.custom_reward_function.path="${REWARD_FN_PATH}" \
   reward.custom_reward_function.name=compute_score_minimind \
   trainer.critic_warmup=0 \
-  trainer.logger='["console","wandb"]' \
-  trainer.project_name="${WANDB_PROJECT}" \
-  trainer.experiment_name="${WANDB_EXPERIMENT}" \
+  trainer.logger="${VERL_LOGGER}" \
+  trainer.project_name="${VERL_PROJECT}" \
+  trainer.experiment_name="${VERL_EXPERIMENT}" \
   trainer.n_gpus_per_node=2 \
   trainer.nnodes=1 \
   trainer.save_freq=20 \

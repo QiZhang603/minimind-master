@@ -8,13 +8,13 @@ This guide is for learning-oriented reproduction, not just one-click run.
 conda create -n minimind python=3.10 -y
 conda activate minimind
 pip install -r requirements.txt
-pip install wandb datasets pyarrow ray verl
+pip install swanlab datasets pyarrow ray verl
 ```
 
 Optional but recommended for monitoring:
 
 ```bash
-wandb login
+swanlab login
 ```
 
 ## 2. Data preparation
@@ -38,7 +38,7 @@ python trainer/verl_tools/convert_minimind_rlaif_to_verl.py \
 ### Step A: Pretrain (LM basics)
 
 ```bash
-python trainer/train_pretrain.py --use_wandb --tracker wandb --wandb_project MiniMind-Pretrain
+python trainer/train_pretrain.py --use_wandb --tracker swanlab --wandb_project MiniMind-Pretrain
 ```
 
 Focus:
@@ -49,7 +49,7 @@ Focus:
 ### Step B: Full SFT (instruction alignment)
 
 ```bash
-python trainer/train_full_sft.py --use_wandb --tracker wandb --wandb_project MiniMind-Full-SFT
+python trainer/train_full_sft.py --use_wandb --tracker swanlab --wandb_project MiniMind-Full-SFT
 ```
 
 Focus:
@@ -60,7 +60,7 @@ Focus:
 ### Step C: LoRA (parameter-efficient tuning)
 
 ```bash
-python trainer/train_lora.py --use_wandb --tracker wandb --wandb_project MiniMind-LoRA
+python trainer/train_lora.py --use_wandb --tracker swanlab --wandb_project MiniMind-LoRA
 ```
 
 Focus:
@@ -71,7 +71,7 @@ Focus:
 ### Step D: Native MiniMind GRPO baseline
 
 ```bash
-python trainer/train_grpo.py --use_wandb --tracker wandb --wandb_project MiniMind-GRPO
+python trainer/train_grpo.py --use_wandb --tracker swanlab --wandb_project MiniMind-GRPO
 ```
 
 Focus:
@@ -112,20 +112,30 @@ Then:
 2. Open timeline json from out/verl_grpo_debug_ckpt/ray_timeline.json in https://ui.perfetto.dev
 3. Track rollout, reward, and update stages to understand GRPO data flow
 
-## 5. Notes on experiment tracking
+## 5. Notes on experiment tracking (swanlab only)
 
-Training scripts now support tracker backend switching:
+If you only use swanlab, keep all MiniMind native training commands on swanlab:
 
-- tracker=swanlab (default)
-- tracker=wandb
+- always set `--use_wandb --tracker swanlab`
+- `--wandb_entity` and `--wandb_proxy` are only for wandb backend and can be ignored in swanlab mode
 
-Example with proxy and entity:
+Recommended environment setup:
+
+```bash
+swanlab login
+export SWANLAB_PROJECT=MiniMind
+```
+
+Example command:
 
 ```bash
 python trainer/train_full_sft.py \
   --use_wandb \
-  --tracker wandb \
-  --wandb_project MiniMind-Full-SFT \
-  --wandb_entity your_team \
-  --wandb_proxy http://127.0.0.1:7890
+  --tracker swanlab \
+  --wandb_project MiniMind-Full-SFT
 ```
+
+Note for verl:
+
+- Current verl examples in this repo use `console` logger by default in shell scripts.
+- verl does not provide first-party swanlab logger out of the box.

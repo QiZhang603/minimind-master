@@ -11,7 +11,7 @@ mkdir -p "${CKPT_DIR}"
 
 # This debug preset keeps run time short and emits timeline for Perfetto/Chrome trace.
 CKPT_DIR="${CKPT_DIR}" \
-WANDB_EXPERIMENT="${WANDB_EXPERIMENT:-minimind-grpo-debug}" \
+VERL_EXPERIMENT="${VERL_EXPERIMENT:-minimind-grpo-debug}" \
 TRAIN_BATCH_SIZE="${TRAIN_BATCH_SIZE:-16}" \
 PPO_MINI_BATCH_SIZE="${PPO_MINI_BATCH_SIZE:-8}" \
 PPO_MICRO_BATCH_SIZE_PER_GPU="${PPO_MICRO_BATCH_SIZE_PER_GPU:-1}" \
